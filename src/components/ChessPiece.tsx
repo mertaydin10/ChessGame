@@ -6,22 +6,8 @@ interface Props {
 }
 
 const PIECE_UNICODE: Record<string, Record<string, string>> = {
-  white: {
-    king: '♔',
-    queen: '♕',
-    rook: '♖',
-    bishop: '♗',
-    knight: '♘',
-    pawn: '♙',
-  },
-  black: {
-    king: '♚',
-    queen: '♛',
-    rook: '♜',
-    bishop: '♝',
-    knight: '♞',
-    pawn: '♟',
-  },
+  white: { king: '♔', queen: '♕', rook: '♖', bishop: '♗', knight: '♘', pawn: '♙' },
+  black: { king: '♚', queen: '♛', rook: '♜', bishop: '♝', knight: '♞', pawn: '♟' },
 };
 
 export default function ChessPiece({ piece, size = 52 }: Props) {
@@ -36,8 +22,8 @@ export default function ChessPiece({ piece, size = 52 }: Props) {
         display: 'block',
         textAlign: 'center',
         filter: piece.color === 'white'
-          ? 'drop-shadow(0 1px 2px rgba(0,0,0,0.5))'
-          : 'drop-shadow(0 1px 2px rgba(255,255,255,0.2))',
+          ? 'drop-shadow(0 2px 3px rgba(0,0,0,0.6))'
+          : 'drop-shadow(0 2px 3px rgba(0,0,0,0.8)) drop-shadow(0 0 1px rgba(255,255,255,0.1))',
         cursor: 'grab',
       }}
       role="img"

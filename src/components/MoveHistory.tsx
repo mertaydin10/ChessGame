@@ -5,13 +5,8 @@ interface Props {
   moves: Move[];
 }
 
-const PIECE_LETTERS: Record<string, string> = {
-  king: 'S',
-  queen: 'V',
-  rook: 'K',
-  bishop: 'F',
-  knight: 'A',
-  pawn: '',
+const PIECE_SYMBOLS: Record<string, string> = {
+  king: '♚', queen: '♛', rook: '♜', bishop: '♝', knight: '♞', pawn: '',
 };
 
 const FILE = ['a','b','c','d','e','f','g','h'];
@@ -20,14 +15,13 @@ function formatMove(move: Move): string {
   if (move.isCastling) {
     return move.to.col > move.from.col ? 'O-O' : 'O-O-O';
   }
-  const piece = PIECE_LETTERS[move.piece.type];
+  const sym = PIECE_SYMBOLS[move.piece.type];
   const capture = move.captured || move.isEnPassant ? 'x' : '';
-  const from = `${FILE[move.from.col]}${8 - move.from.row}`;
   const to = `${FILE[move.to.col]}${8 - move.to.row}`;
   if (move.piece.type === 'pawn' && capture) {
     return `${FILE[move.from.col]}x${to}`;
   }
-  return `${piece}${from}${capture}${to}${move.promotion ? `=${move.promotion[0].toUpperCase()}` : ''}`;
+  return `${sym}${capture}${to}${move.promotion ? `=${move.promotion[0].toUpperCase()}` : ''}`;
 }
 
 export default function MoveHistory({ moves }: Props) {
@@ -44,42 +38,77 @@ export default function MoveHistory({ moves }: Props) {
 
   return (
     <div style={{
-      background: 'rgba(255,255,255,0.03)',
-      borderRadius: 12,
-      padding: '12px 0',
       flex: 1,
       overflowY: 'auto',
+      padding: '6px 0',
       minHeight: 0,
-      border: '1px solid rgba(255,255,255,0.07)',
     }}>
-      <div style={{ padding: '0 12px 6px', color: '#94a3b8', fontSize: 12, fontWeight: 600, letterSpacing: 1 }}>
-        HAMLELEr
-      </div>
       {pairs.length === 0 && (
-        <div style={{ color: '#475569', fontSize: 13, textAlign: 'center', padding: '20px 0' }}>
+        <div style={{
+          color: '#484f58',
+          fontSize: 13,
+          textAlign: 'center',
+          padding: '32px 16px',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: 8,
+        }}>
+          <span style={{ fontSize: 28, opacity: 0.3 }}>♟</span>
           Henüz hamle yok
         </div>
       )}
-      {pairs.map(([white, black], i) => (
-        <div
-          key={i}
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '32px 1fr 1fr',
-            gap: 4,
-            padding: '3px 12px',
-            background: i % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.02)',
-          }}
-        >
-          <span style={{ color: '#475569', fontSize: 13, fontWeight: 500 }}>{i + 1}.</span>
-          <span style={{ color: '#e2e8f0', fontSize: 13, fontFamily: 'monospace', fontWeight: 500 }}>
-            {formatMove(white)}
-          </span>
-          <span style={{ color: '#94a3b8', fontSize: 13, fontFamily: 'monospace' }}>
-            {black ? formatMove(black) : ''}
-          </span>
-        </div>
-      ))}
+      {pairs.map(([white, black], i) => {
+        const isLast = i === pairs.length - 1;
+        return (
+          <div
+            key={i}
+            style={{
+              display: 'grid',
+              gridTemplateColumns: '28px 1fr 1fr',
+              gap: 2,
+              padding: '4px 10px',
+              background: isLast
+                ? 'rgba(99,102,241,0.08)'
+                : i % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.015)',
+              borderLeft: isLast ? '2px solid rgba(99,102,241,0.5)' : '2px solid transparent',
+              transition: 'background 0.2s',
+            }}
+          >
+            <span style={{
+              color: '#484f58',
+              fontSize: 12,
+              fontWeight: 500,
+              fontFamily: 'monospace',
+              paddingTop: 1,
+            }}>{i + 1}.</span>
+
+            <span style={{
+              color: '#e6edf3',
+              fontSize: 13,
+              fontFamily: 'monospace',
+              fontWeight: 600,
+              padding: '1px 6px',
+              borderRadius: 4,
+              background: 'rgba(255,255,255,0.06)',
+            }}>
+              {formatMove(white)}
+            </span>
+
+            <span style={{
+              color: '#7d8590',
+              fontSize: 13,
+              fontFamily: 'monospace',
+              fontWeight: 500,
+              padding: '1px 6px',
+              borderRadius: 4,
+              background: black ? 'rgba(255,255,255,0.03)' : 'transparent',
+            }}>
+              {black ? formatMove(black) : ''}
+            </span>
+          </div>
+        );
+      })}
       <div ref={endRef} />
     </div>
   );

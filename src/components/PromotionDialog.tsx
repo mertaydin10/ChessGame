@@ -5,7 +5,12 @@ interface Props {
   onSelect: (piece: PieceType) => void;
 }
 
-const OPTIONS: PieceType[] = ['queen', 'rook', 'bishop', 'knight'];
+const OPTIONS: { type: PieceType; label: string }[] = [
+  { type: 'queen',  label: 'Vezir'  },
+  { type: 'rook',   label: 'Kale'   },
+  { type: 'bishop', label: 'Fil'    },
+  { type: 'knight', label: 'At'     },
+];
 
 const UNICODE: Record<string, Record<string, string>> = {
   white: { queen: '♕', rook: '♖', bishop: '♗', knight: '♘' },
@@ -17,56 +22,80 @@ export default function PromotionDialog({ color, onSelect }: Props) {
     <div style={{
       position: 'fixed',
       inset: 0,
-      background: 'rgba(0,0,0,0.7)',
+      background: 'rgba(0,0,0,0.75)',
+      backdropFilter: 'blur(6px)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       zIndex: 100,
+      animation: 'fadeInUp 0.2s ease',
     }}>
       <div style={{
-        background: 'linear-gradient(135deg, #1e293b, #0f172a)',
-        borderRadius: 16,
-        padding: '32px 40px',
+        background: 'linear-gradient(145deg, #161b22, #0d1117)',
+        borderRadius: 20,
+        padding: '28px 32px',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         gap: 20,
-        border: '1px solid rgba(255,255,255,0.1)',
-        boxShadow: '0 25px 50px rgba(0,0,0,0.5)',
+        border: '1px solid #21262d',
+        boxShadow: '0 25px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.04)',
       }}>
-        <h2 style={{ color: '#f1f5f9', margin: 0, fontSize: 20, fontWeight: 600 }}>
-          Piyon Terfi! Bir taş seçin
-        </h2>
-        <div style={{ display: 'flex', gap: 12 }}>
-          {OPTIONS.map(piece => (
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: 28, marginBottom: 6 }}>♟</div>
+          <h2 style={{
+            color: '#e6edf3',
+            margin: 0,
+            fontSize: 18,
+            fontWeight: 700,
+            fontFamily: "'Playfair Display', serif",
+          }}>
+            Piyon Terfisi
+          </h2>
+          <p style={{ color: '#7d8590', fontSize: 12, marginTop: 4 }}>
+            Bir taş seçin
+          </p>
+        </div>
+
+        <div style={{ display: 'flex', gap: 10 }}>
+          {OPTIONS.map(opt => (
             <button
-              key={piece}
-              onClick={() => onSelect(piece)}
+              key={opt.type}
+              onClick={() => onSelect(opt.type)}
               style={{
-                width: 80,
-                height: 80,
-                fontSize: 48,
-                background: 'rgba(255,255,255,0.05)',
-                border: '1px solid rgba(255,255,255,0.15)',
-                borderRadius: 12,
+                width: 82,
+                height: 90,
+                background: 'rgba(255,255,255,0.04)',
+                border: '1px solid #30363d',
+                borderRadius: 14,
                 cursor: 'pointer',
                 display: 'flex',
+                flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
+                gap: 4,
                 transition: 'all 0.15s',
-                color: color === 'white' ? '#fff' : '#1e293b',
+                fontFamily: "'Inter', sans-serif",
               }}
               onMouseEnter={e => {
-                (e.target as HTMLElement).style.background = 'rgba(99,102,241,0.3)';
-                (e.target as HTMLElement).style.transform = 'scale(1.1)';
+                e.currentTarget.style.background = 'rgba(99,102,241,0.2)';
+                e.currentTarget.style.borderColor = 'rgba(99,102,241,0.5)';
+                e.currentTarget.style.transform = 'translateY(-3px) scale(1.05)';
+                e.currentTarget.style.boxShadow = '0 8px 24px rgba(99,102,241,0.3)';
               }}
               onMouseLeave={e => {
-                (e.target as HTMLElement).style.background = 'rgba(255,255,255,0.05)';
-                (e.target as HTMLElement).style.transform = 'scale(1)';
+                e.currentTarget.style.background = 'rgba(255,255,255,0.04)';
+                e.currentTarget.style.borderColor = '#30363d';
+                e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                e.currentTarget.style.boxShadow = 'none';
               }}
-              title={piece}
             >
-              {UNICODE[color][piece]}
+              <span style={{ fontSize: 42, lineHeight: 1 }}>
+                {UNICODE[color][opt.type]}
+              </span>
+              <span style={{ color: '#7d8590', fontSize: 11, fontWeight: 500 }}>
+                {opt.label}
+              </span>
             </button>
           ))}
         </div>
